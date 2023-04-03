@@ -1,0 +1,56 @@
+body{
+    background-color: rgb(0, 0, 0);
+
+}
+h1{
+    color: rgba(5, 79, 79, 0.977);
+    text-align: center;
+    background-color: #e6680f ;
+    font-size: 50px;
+    text-decoration: wavy;
+    padding: 0ch;
+    border-radius: 0cm;
+    border-right-style: inherit;
+    margin: 52px;
+}
+h2{
+    color: rgb(28, 116, 28);
+    font-size: 22px;
+}
+}
+
+#intro {
+    color: rgba(11, 18, 82, 0.977);
+    font-size: 35px;
+    font-weight: bold;
+}
+
+div p{
+    color: rgba(255, 255, 255, 0.977);
+    font-size: 17px;
+}
+
+.classify {
+    color: rgba(13, 26, 143, 0.977);
+}
+
+p {
+    color: aliceblue;
+}
+
+li{
+    color: #f2ff01;
+    font-size: 19px;
+}
+
+li p {
+    color: rgb(126, 227, 227);
+}
+
+div h2{
+    color: rgb(167, 45, 69);
+    text-transform: uppercase;
+    text-decoration: dotted;
+    background-color: aliceblue;
+    background-size:calc(10)
+}

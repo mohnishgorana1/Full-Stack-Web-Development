@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Queries</title>
+    <!--  media queries -->
+    <!-- 
+        @media media-target media_feature and(media_feature: value)
+            {
+
+            } 
+    -->
+   
+    <style>
+        body{
+            background-color: #ff0000;
+        }
+
+        div{
+            font-size: x-large;
+            text-align: center;
+        }
+        div::after{
+            content: 'Mohnish';
+        }
+        @media(max-width:400px)
+        {
+            body{
+                background-color: aquamarine;
+            }
+            div::after{
+                content:'smaller'
+            }
+        }
+        @media( 401px <= width <= 700px )
+        {
+            body{
+                background-color: #f05d0f;
+            }
+            div::after{
+                content:'hey bhagwa rang'
+            }
+        }
+        @media(min-width:768px)
+        {
+            body{
+                background-color: aquamarine;
+            }
+            div::after{
+                content:'whoa'
+            }
+        }
+        @media(min-width:900px)
+        {
+            body{
+                background-color: rgb(52, 38, 182);
+            }
+            div::after{
+                content:'whoa'
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+    </div>
+</body>
+</html>

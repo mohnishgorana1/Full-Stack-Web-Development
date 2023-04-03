@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album</title>
+
+    <style>
+        .container{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-template-rows: repeat(4,200px);
+
+
+        }
+       
+
+        .box{
+            /* height:100px;
+            width:100px; */
+
+        }
+        
+        .box1{
+            background-color: #e40909;
+            grid-row-start:1 ;
+            grid-row-end:3;
+            overflow: hidden;
+            
+            
+        }
+        .box2{
+            background-color: #660c6baf;
+            overflow: hidden;
+            grid-column:2/5;
+            
+        }
+        .box3{
+            background-color: #4ee214;
+            overflow: hidden;
+            grid-row:2/4;
+            grid-column: 2/3;
+        }
+        .box4{
+            background-color: rgb(173, 107, 57);
+            overflow: hidden;
+            grid-column:3/4;
+            grid-row:2/4;
+        } 
+        .box5{
+            background-color: #0825e3;
+            overflow: hidden;
+            grid-column:4/5;
+            grid-row:2/4;
+        } 
+        .box6{
+            background-color: #b35353;
+            overflow: hidden;
+            grid-row:3/4;
+            grid-column: 1/2;
+        } 
+        .box7{
+            background-color: #7b2929;
+            overflow: hidden;
+            grid-row:4/5;
+            grid-column: 1/2;
+        } 
+        .box8{
+            background-color: #13cece;
+            overflow: hidden;
+            grid-row:4/5;
+            grid-column: 2/3;
+        } 
+        .box9{
+            background-color: #e2f116;
+            overflow: hidden;
+            grid-row:4/5;
+            grid-column: 3/5;
+        } 
+        img{
+            width:3fr
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Grid Album -->
+    <div class="container">
+        <div class="box box1">
+            <img src="https://images.pexels.com/photos/747113/pexels-photo-747113.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+        </div>
+        <div class="box box2">
+          <img src="https://images.pexels.com/photos/2113566/pexels-photo-2113566.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+        </div>
+        <div class="box box3">
+            <img src="https://images.pexels.com/photos/14073289/pexels-photo-14073289.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+        </div>
+        <div class="box box4">
+            <img src="https://images.pexels.com/photos/15190564/pexels-photo-15190564.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+        </div>
+        <div class="box box5">
+            <img src="https://images.pexels.com/photos/6758370/pexels-photo-6758370.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="">
+        </div>
+        <div class="box box6">
+            <img src="https://images.pexels.com/photos/15172875/pexels-photo-15172875.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="">
+        </div>
+        <div class="box box7">
+            <img src="https://images.pexels.com/photos/14705336/pexels-photo-14705336.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="">
+        </div>
+        <div class="box box8">
+            <img src="https://images.pexels.com/photos/15292924/pexels-photo-15292924.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="">
+        </div>
+        <div class="box box9">
+            <img src="https://images.pexels.com/photos/13840044/pexels-photo-13840044.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="">
+        </div>
+    </div>
+    <div>
+    
+    </div>
+   
+</body>
+</html>

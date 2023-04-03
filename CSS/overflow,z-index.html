@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>overflow z-index</title>
+
+    <style>
+        p{
+            height:250px;
+            width:250px;
+            border:2px dashed red;
+
+            overflow: scroll; /*overflow:hidden*/
+        }
+
+        .one{
+            height:100px;
+            width:100px;
+            background-color: red;
+
+            position:absolute;
+            top:0;
+            z-index: -1;
+
+            /* top se 0 diya or z index -1 yani top se 0 pe jo bhi h uske piche aa jaye -2 -1 0 1 2 3 */
+        }
+
+        .two{
+            height:50px;
+            width:50px;
+            background-color: yellow;
+            position: absolute;
+            top:0;
+            
+            z-index:0
+
+            /* yaha pe yello wale ka z indx 0 ha red wale ka -1 to yellow wal upar rhega phir text wala content and then red box  */
+        }
+    </style>
+</head>
+<body>
+    <!-- Overflow -->
+    <p>
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt, qui earum neque, a similique commodi facere ex fuga omnis quae at dolore exercitationem nobis! Quam quas, sequi totam beatae exercitationem sit ipsam voluptatem nemo perferendis maxime adipisci quae et quasi, aliquid aliquam numquam quaerat? Soluta officia inventore quod recusandae culpa sunt eveniet ullam repudiandae eligendi pariatur natus vitae itaque aliquid corrupti, obcaecati officiis expedita cupiditate non maxime dolorum eum, quis voluptatem! Quibusdam provident tenetur eos recusandae consequuntur fuga enim quod iste facere a dolores, incidunt blanditiis animi quidem illum repellat asperiores soluta, adipisci ex mollitia placeat, officiis doloremque totam! Labore?
+    </p>
+
+    <!-- Z-index -->
+    <div class="one"></div>
+    <div class="two"></div>
+</body>
+</html>

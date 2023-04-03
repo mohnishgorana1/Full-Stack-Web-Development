@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Methods</title>
+</head>
+<body>
+    <!-- ID -->
+    <p id="one" > <span>Hello </span> Namaste</p>
+
+    <!-- <script src="./js_dom.js"></script> -->
+
+    <!-- class -->
+    <ul>
+        <li class="tech">one</li>
+        <li class="tech">two</li>
+        <li class="tech">three</li>
+    </ul>
+    <!-- Tag name -->
+    <h4>Hey</h4>
+    <h4>namaste</h4>
+    <h4>hola!</h4>
+
+
+    <!-- Query selcetor -->
+    <h2>Hello My World</h2>
+    <h2 class="classic">Duniya!</h2>
+    <h2 id="ids">Bhokal</h2>
+    
+    <script>
+        // ID
+        let var1 = document.getElementById("one");
+        console.log(var1.innerText);
+
+        // class
+        let var2 = document.getElementsByClassName("tech");
+        console.log(var2[2].innerText);
+
+        var2[1].innerText = "Nodejs";
+
+        // Tag name
+        let var3= document.getElementsByTagName("h4")
+        console.log(var3[1].innerHTML);
+        var3[2].innerText = "Mohnish";
+        var3[2].style.color = "red";
+
+        // Query Selectorr
+
+        let var4 = document.querySelector(".classic");
+        console.log(var4);
+
+        var4.className = "HELLO";
+
+        var4.classList = "hello helo hola"; // for 
+
+        var4.setAttribute("id","anurag");  // ("attribute type"  , "atribute name")
+
+        
+
+
+
+
+        let var5 =  document
+
+
+
+    </script>
+</body>
+</html>

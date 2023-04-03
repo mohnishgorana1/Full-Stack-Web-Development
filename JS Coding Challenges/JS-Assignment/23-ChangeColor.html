@@ -1,0 +1,54 @@
+<!-- Create a button that utilizes an array of colors and the Math.random method to change the background color
+of the page upon clicking. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Changer</title>
+
+    <style>
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #c6c9a9;
+        }
+        button{
+            margin:100px ;
+            padding: 10px;
+            border:1px solid transparent;
+            background-color: #da1d1d;
+            border-radius: 8px;
+            font-size: 30px;
+            color: white;
+            
+            
+        }
+    </style>
+</head>
+<body id="body">
+
+    <button id="btn" onclick="change()">
+        Hello !
+    </button>
+
+    <script>
+
+        let colors = ["red", "blue", "green", "pink", "magenta", "olivedrab", "purple", "yellow", "black"]
+        let index = Math.floor(Math.random()*10);
+
+        function change(){
+            let colors = ["red", "blue", "green", "pink", "magenta", "olivedrab", "purple", "yellow", "black"]
+            let index = Math.floor(Math.random()*10);
+            let body = document.getElementById("body");
+            body.style.backgroundColor = colors[index];
+
+        }
+
+    </script>
+    
+</body>
+</html>

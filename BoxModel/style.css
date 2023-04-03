@@ -1,0 +1,106 @@
+body{
+    background-color: rgb(187, 171, 193);
+}
+
+div {
+    width:400px;
+    height:100px;
+    border-radius: 10%;
+}
+
+h1{
+    background-color: aqua;
+    width:90px;
+    height: 1em;
+    padding: 10px;
+}
+
+
+
+
+.first {
+    color:rgb(244, 244, 244);
+    background-color: rgb(211, 15, 15);
+
+    border-style: solid;
+    border-color: black;
+    border-width: 5px;
+
+    box-sizing: border-box;
+}
+
+.second {
+    color:rgb(255, 255, 255);
+    background-color: rgb(47, 161, 45);
+
+    border-style: dashed;
+    border-color: black;
+    border-width: 4px;
+    border-left-color: rgb(252, 0, 0);
+
+    box-sizing: border-box;
+}
+
+.third {
+    color:rgb(255, 255, 255);
+    background-color: rgb(37, 59, 167);
+
+    /* border : width style color */
+    border :4px solid rgb(197, 79, 36);
+    border-right-style: dotted;
+
+}
+
+.btn #b1 {
+    color:rgb(235, 235, 235);
+    background-color:#23159c;
+    border-radius: 1rem;
+
+    padding: 10px;
+}
+.btn #b2 {
+    color:rgb(235, 235, 235);
+    background-color:#23159c;
+    border-radius: 1rem;
+    /* padding : */
+    padding:7px 10px;
+}
+.btn #b3 {
+    color:rgb(235, 235, 235);
+    background-color:#23159c;
+    border-radius: 1rem;
+    /*padding:top hor btm  */
+    padding: 10px 5px 20px;
+
+
+
+}
+.btn #b4 {
+    color:rgb(235, 235, 235);
+    background-color:#23159c;
+    border-radius: 1rem;
+    /* padding : top rgt btm left */
+    padding: 10px 5px 18px 30px;
+
+}
+
+.margin {
+    background-color: rgb(24, 149, 160);
+    color:rgb(230, 225, 224);
+    max-width:fit-content;
+    margin-right: 0px;
+    border-radius: 10px;
+    padding:10px;
+    
+}
+
+.margin h2 {
+    max-width: fit-content;
+    padding:10px 8px 5px 8px;
+    margin: 10px;
+    border-color: coral;
+    border-style: solid;
+    border-radius: 10px;
+    display: inline-block;
+
+}

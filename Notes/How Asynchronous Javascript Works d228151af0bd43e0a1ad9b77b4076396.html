@@ -1,0 +1,734 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>How Asynchronous Javascript Works</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d228151a-f0bd-43e0-a1ad-9b77b4076396" class="page sans"><header><img class="page-cover-image" src="https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb" style="object-position:center 50%"/><h1 class="page-title">How Asynchronous Javascript Works</h1></header><div class="page-body"><h1 id="60af41c0-4f14-4603-9070-872eee823e93" class=""><strong><strong>What is Synchronous Code?</strong></strong></h1><p id="de529fc1-ae8a-41fb-9206-1eb29a5f3ca8" class="">When we write a program in JavaScript, it executes line by line. When a line is completely executed, then and then only does the code move forward to execute the next line.</p><pre id="49b60b09-27b5-49d0-8939-1b7557f9a425" class="code code-wrap"><code>let greet_one = &quot;Hello&quot;
+let greet_two = &quot;World!!!&quot;
+console.log(greet_one)
+for(let i=0;i&lt;1000000000;i++){
+}
+console.log(greet_two);</code></pre><p id="e939805e-c4b1-4759-b5c4-97f4c656ac0f" class="">Now if you run the above example on your machine you will notice that <code>greet_one</code> logs first. Then the program waits for a couple of seconds and then logs <code>greet_two</code>. This is because the code executes line by line. This is called synchronous code.</p><p id="3d2bbd90-13e4-4ba2-9186-f74b8ce2e483" class="">This creates lot of problems. For example, if a certain piece of code takes 10 seconds to execute, the code after it won&#x27;t be able to execute until it&#x27;s finished, causing delays.</p><h1 id="c8696fe8-2680-4c53-8dcf-7e039144fde2" class=""><strong><strong>What is Asynchronous Code?</strong></strong></h1><p id="f68085ad-cf75-412e-ab44-003d1b80044c" class="">With asynchronous code, multiple tasks can execute at the same time while tasks in the background finish. This is what we call non-blocking code. The execution of other code won&#x27;t stop while an asynchronous task finishes its work.</p><p id="7470365a-9531-4eed-afc6-5dd7c24795dd" class="">Let&#x27;s see an example of asynchronous code:</p><pre id="2f7a83a8-186f-4a99-8815-b2bf5eda114c" class="code code-wrap"><code>let greet_one = &quot;Hello&quot;
+let greet_two = &quot;World!!!&quot;
+console.log(greet_one)
+setTimeout(function(){
+    console.log(&quot;Asynchronous&quot;);
+}, 10000)
+console.log(greet_two);</code></pre><p id="04ecf6cb-0d78-4d71-842c-8540fdcf62c1" class="">In the above example, if you run the code on your machine you will see <code>greet_one</code> and <code>greet_two</code> logged even there is code in between those 2 logs.</p><p id="52e159c0-216f-4a66-9a54-177d137a3bb9" class=""><span style="border-bottom:0.05em solid">Now, </span><span style="border-bottom:0.05em solid"><mark class="highlight-brown_background">setTimeout</mark></span><span style="border-bottom:0.05em solid"> is asynchronous so it runs in background, allowing code after it to execute while it runs. After 10 seconds, </span><span style="border-bottom:0.05em solid"><code>Asynchronous</code></span><span style="border-bottom:0.05em solid"> will print because we set a time of 10 seconds in setTimeout to execute it after 10 seconds.</span></p><h1 id="f195a630-b8e0-4209-8491-4bd7220fd98f" class=""><strong>Callback function</strong></h1><p id="cc8b9e4a-5c72-464c-afcd-bece2253da89" class=""><strong>A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of routine or action.</strong></p><p id="ac9cf7de-020f-44b6-8c6b-acd92dfd29ea" class="">Here is a quick example:</p><pre id="ea656d28-b37f-4b98-91c6-a57d51e0e084" class="code code-wrap"><code>function add(x,y){
+    return x+y
+}
+
+function divide(x,y){
+    return x/y
+}
+
+function compute(callBack, x, y){
+    return callBack(x,y)
+}
+
+console.log(compute(add, 10, 5))    
+console.log(compute(divide, 10, 5))</code></pre><p id="f32da24a-114d-41ee-97cd-7a3f03e62b49" class="">Now when we call <code>compute</code>with three arguments, one of them is an operation. When we enter in the compute function, the function returns a function with a given action name. It, in response, calls that function and returns the result</p><h3 id="b34fba5a-492b-449c-90db-a7cfdb467b17" class=""><strong><strong>Callback Hell</strong></strong></h3><p id="e8587eaa-c94f-43fc-be65-819253020955" class="">Callbacks are great, but you don&#x27;t want to use them excessively. If you do, you&#x27;ll get something called &quot;callback hell&quot;. This happens when you nest callbacks within callbacks many levels deep.</p><p id="3edb940c-9b6f-4e84-a14d-54ade10473e0" class="">The shape of callback hell is like a pyramid and is also called the “pyramid of doom”.</p><h3 id="b4dfc797-91d9-44fc-b00d-9ea9ee93af20" class=""><strong>Inversion of Control</strong></h3><p id="9331b51c-85d8-4d17-b469-261b50496c81" class="">inversion of control is the notion of having code under your control in one part of the program, then handing control over to a callback in another part of the program</p><p id="5f3f14d8-a7bd-4e80-99e2-db11386726fc" class="">
+</p><p id="f03f9e60-2637-47cd-8836-2c917874d108" class=""><em><span style="border-bottom:0.05em solid">We can escape this callback hell using something call </span></em><em><span style="border-bottom:0.05em solid"><code><strong>Promises</strong></code></span></em><em><span style="border-bottom:0.05em solid"><strong> </strong></span></em><em><span style="border-bottom:0.05em solid">in asynchronous JavaScript.</span></em></p><h1 id="edb226cf-c481-44e3-bc08-f9247bb41848" class=""><strong>How Promises Work in JavaScript</strong></h1><p id="98c284cf-0900-421f-9377-f685cf9ad273" class="">A promise is placeholder for the future result of an asynchronous operation. In simple words, we can say it is a container for a future value.</p><p id="165a8bfc-b86a-4d05-8fee-ddc771b6142c" class="">Promises are like lottery ticket. When we buy a lottery ticket, it says we will get money if our outcome is right. This is like a promise. The lottery draw happens asynchronously, and if the numbers match, we receive the money which was promised.</p><p id="ddbf1d19-fbd9-4d68-a5af-817e9f7ddd8a" class=""><strong>Promises </strong>are the foundation of asynchronous programming in modern JavaScript. A promise is an object returned by an asynchronous function, which represents the current state of the operation. At the time the promise is returned to the caller, the operation often isn&#x27;t finished, but the promise object provides methods to handle the eventual success or failure of the operation.</p><h2 id="109f06c2-1f02-422b-9a4f-861bb372a693" class=""><strong><strong>How to Create a Promise</strong></strong></h2><p id="04fa42f8-2bd7-4353-b490-889d86626d0f" class="">Firstly, promises are asynchronous in nature. We can create any task to be asynchronous by creating our own promises. We can handle them using the <code>then()</code>and <code>catch()</code>methods.</p><p id="33cbd4db-da99-4a7e-b822-1aa808bcad25" class="">Once you know how to create promises, you can make any piece of code asynchronous. Then it will not block code execution if the other code running is taking a long time to complete.</p><pre id="ccbc1494-c8c7-4b1e-9f37-d1deb375434e" class="code code-wrap"><code>1  let lottery = new Promise(function (resolve, reject) {
+2     console.log(&quot;Lottery is happening&quot;);
+3 
+4     setTimeout(() =&gt; {
+5        if(Math.random() &gt;= 0.5){
+6             resolve(&quot;You Won!!!&quot;)
+7        }
+8        else{
+9            reject(new Error(&quot;Better luck next time&quot;))
+10       }
+11    }, 5000);
+12  })
+</code></pre><p id="204d8f09-41c6-4ec4-bd00-989cea819249" class="">First we created a promise using <code>new Promise()</code>. It will have a function with two arguments, <code>resolve</code> and <code>reject</code>.</p><p id="75524c6e-5f43-4853-816c-cef6a539b8e0" class="">We will call <code>resolve</code> when our task is successful, and <code>reject</code> when the task is unsuccessful. We will use the lottery terminology that I used to explain the concept of promises in the above section.</p><p id="935e57a9-5a9c-4639-bccb-c5d9bebae048" class="">Let&#x27;s say if <code>Math.random()</code> gives a value below or equal to 0.5, we will win the lottery. Otherwise we will lose the lottery. If the condition is not true, the code throws a new error for better understanding of the error in the console. So we can throw our own custom errors to the user for better understanding.</p><p id="f9e7cbdf-5e88-4b14-aaae-40cd68c32c96" class="">In the example above, if <code>Math.rondom()</code> is less that 0.5, that means the user lost the lottery. So we throw our custom error <code>Better luck next time</code> so that the user understands that they lost the lottery.</p><p id="7736da86-9172-4965-b785-19fade154992" class="">Now we will try to consume the promise that we created.</p><pre id="8a3f79a5-cde5-41c9-887d-a67bd4617996" class="code code-wrap"><code>let lottery = new Promise(function(resolve, reject){
+    console.log(&quot;Lottery is happening&quot;);
+
+    setTimeout(() =&gt; {
+        if(Math.random() &gt;= 0.5){
+            resolve(&quot;You Won!!!&quot;)
+        }
+        else{
+            reject(new Error(&quot;Better luck next time&quot;))
+        }
+    }, 5000);
+
+})
+
+lottery.then((response) =&gt;{
+    console.log(response);
+}).catch((err) =&gt;{
+    console.log(err);
+})</code></pre><p id="4789ffd1-43a2-4ed9-93f4-0e730a2ac8e4" class="">We consume the promise using the <code>then()</code>method. It will print the response that we provided in <code>resolve()</code>. If the promise is rejected we will catch the error in the <code>catch()</code>method. The error will come from the <code>reject() </code>argument that we mentioned in our own promise.</p><h3 id="e65eb799-4836-461e-9ba8-695c3b94db29" class=""><strong><strong>How to Consume Promises using Async/await</strong></strong></h3><p id="53866ed2-b2c4-4185-8c78-dd811e33c2cb" class="">Consuming promises using the then() method can become messy sometimes. So we have an alternative method to consume promises called async/await.</p><p id="3eeb8e55-0c88-49d0-a6b7-c8b411e15dd3" class=""><span style="border-bottom:0.05em solid"><em>Just keep in mind that async/await will be using the </em></span><span style="border-bottom:0.05em solid"><em><code>then()</code></em></span><span style="border-bottom:0.05em solid"><em>method behind the scenes to consume promises.</em></span></p><p id="af50edfa-04e6-4b92-a325-695ba7ffe681" class="">Why use async/await if we have the <code>then() </code>method? We use async/await because If we start chaining methods to promises using the <code>then()</code>method the chain will be very long and gets complex with the addition of multiple then() methods. So async/await is simpler.</p><p id="1b199387-65d9-4f94-a3a6-0876d603fd0f" class="">
+</p><h3 id="ac2d5148-ac53-4190-a3aa-1df0b012d362" class="">Async Function</h3><p id="3a7fda59-7b0b-4678-bce8-7c32e0a7a0a3" class="">There is a special syntax work with promises in js.</p><p id="c039299d-99df-413a-a9b7-af9e5c344e52" class="">A function can be made async using async keyword like this :</p><pre id="8f0aae6f-f1c6-4207-8727-97a9ef0fa264" class="code code-wrap"><code>async function mohnish(){
+		return 7;            // 
+}</code></pre><p id="84a46699-d7ea-4ba3-a9cd-bd57576897d7" class=""><strong>We can make any function as ‘async’ and the await promise inside it</strong></p><p id="23e5c603-c270-4918-bcaa-1c13e419bf61" class="">An async function always return a promise. Other Values are wrapped in a promise automatically</p><p id="29d87ea4-7487-4085-9527-0c1148608c92" class="">So, async ensures that the function returns a promise and wraps non promises in it.</p><p id="1c5675c7-2994-4ef2-8607-03d2369b5215" class="">
+</p><h3 id="312d6c53-2c4d-43e0-9d90-c4745d1a6f07" class="">Await Keyword</h3><p id="931ce5ea-01e8-48ad-bb58-d28dc568df77" class="">It works inside async function. <div class="indented"><pre id="ac2afd1b-4a66-4d39-a856-12179874e69d" class="code code-wrap"><code>let await  = await promise</code></pre></div></p><p id="b36ceb6c-5e58-44ad-9eca-8aff29b44a3a" class="">The await keyword make javascript wait unitil the promise settles and return its values</p><p id="f64cda98-1c43-4276-8b83-b9507fffc758" class="">Its just a more elegant syntax of getting the promise result than <strong><em>promis.then </em></strong>also it is easier to read and write.</p><figure id="7e9037a4-b8fd-4a6c-9dc8-b98dd4b07865" class="image"><a href="How%20Asynchronous%20Javascript%20Works%20d228151af0bd43e0a1ad9b77b4076396/code-snapshot.png"><img style="width:672px" src="How%20Asynchronous%20Javascript%20Works%20d228151af0bd43e0a1ad9b77b4076396/code-snapshot.png"/></a></figure><p id="383e424d-5d95-413d-afc2-d05236fbc28d" class=""><strong>OUTPUT</strong></p><blockquote id="d0e8fc70-3bd2-472d-a684-5919656f113e" class="block-color-red"><mark class="highlight-blue">Ab Rukega Pls Wait! Fetching Delhi Weather
+Hey I m Cherry and I m Not Waiting
+Delhi weather Fetched 27 Deg
+Ab Rukega Pls Wait! Fetching Mumbai Weather
+Mumbai weather Fetched 22 Deg
+[ &#x27;27 Deg&#x27;, &#x27;22 Deg&#x27; ]</mark></blockquote><p id="46c7b37a-569f-4ddb-94cb-32569d08987b" class="">
+</p><h2 id="9169e9e4-28f9-43b4-bc91-4951b765131f" class=""><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Promises#conclusion">Conclusion</a></h2><p id="100e2937-2495-4d56-8036-0643508ff11d" class="">Promises are the foundation of asynchronous programming in modern JavaScript. They make it easier to express and reason about sequences of asynchronous operations without deeply nested callbacks, and they support a style of error handling that is similar to the synchronous <code>try...catch</code> statement.</p><p id="9ae9cbcc-66fb-49b0-bf81-7bc58bc0ca84" class="">The <code>async</code> and <code>await</code> keywords make it easier to build an operation from a series of consecutive asynchronous function calls, avoiding the need to create explicit promise chains, and allowing you to write code that looks just like synchronous code.</p></div></article></body></html>

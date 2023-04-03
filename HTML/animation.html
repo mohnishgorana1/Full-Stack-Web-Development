@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation</title>
+    <style>
+        div{
+           
+            margin:50px;
+            width: 100px;
+            height:100px;
+            background-color: red;
+            position: relative;
+            /* 
+            animation-name: colorchange;
+            animation-duration: 5s;
+            animation-delay: 3s;
+            animation-iteration-count: 3;
+            animation-direction: alternate-reverse; 
+            animation-fill-mode: forwards;     akri color wala set ho jaega 
+           */
+
+            /* shorthand property for animation */
+            animation: colorchange 5s 3s 2 alternate-reverse forwards;
+        }
+
+        #ease{
+            animation-timing-function: ease;
+        }
+        #linear{
+            animation-timing-function: linear;
+        }
+        #ease-in{
+            animation-timing-function: ease-in;
+        }
+        #ease-in-out{
+            animation-timing-function: ease-in-out;
+        }
+        /* keyframe _nameofkeyframe_ */
+        @keyframes colorchange{     
+            0% {
+                background-color: #ffffff;
+                top:0px;
+                left:0px;
+            }
+            25%{
+                background-color: #ffee00;
+                top:0px;
+                left:200px;
+
+            }
+            75%{
+                background-color: #ff08a9;
+                top:100px;
+                left:200px;
+
+            }
+            100% {
+                background-color: #2f1583;
+                top:100px;
+                left:0px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="ease">ease</div>
+    <div id="linear">linear</div>
+    <div id="ease-in">ease-in</div>
+    <div id="ease-in-out">ease-in-out</div>
+    <p>Tis is animated</p>
+
+</body>
+</html>

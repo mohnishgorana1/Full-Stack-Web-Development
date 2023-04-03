@@ -1,0 +1,40 @@
+body{
+    
+}
+
+h1{
+    text-align: center;
+}
+
+#container {
+    
+    background-color: rgb(17, 54, 87);
+    width:90%;
+    height: 500px;
+    margin:0 auto;
+    border : 5px solid rgb(36, 97, 184);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    flex-wrap: wrap; 
+    align-items:center;
+ 
+    
+}
+
+#container div{
+    width: 200px;
+    height: 200px;
+    font-size: 4rem;
+    text-align: center;
+    flex-basis: 400px;
+}
+
+div:nth-of-type(2)
+{
+    align-self: center;
+}
+div:nth-of-type(3)
+{
+    align-self: flex-end;
+}

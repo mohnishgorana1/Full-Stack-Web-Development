@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM PART 3</title>
+
+</head>
+<body>
+    <h1>Hey there Mohnish Here !</h1>    
+    <p id="js"></p>
+
+    <button onclick="hey()"  id="btn">Submit</button> 
+
+
+    <!-- Javascript -->
+    <script>
+        document.addEventListener("dblclick",hello());
+        function hello()
+        {
+            document.getElementById("js").innerText = "pyare bacho abbu aa gye h "
+        }
+
+        function hey()
+        {
+            document.getElementById("btn").innerText = "Namaste";
+            document.getElementById("btn").style.backgroundColor = "yellow";
+            document.getElementById("btn").style.color = "Red";
+            document.getElementById("btn").style.padding = "10px";
+            document.getElementById("btn").style.fontWeight = "500";
+            document.getElementById("btn").style.border = "2px solid green"
+        }
+    </script>
+</body>
+</html>

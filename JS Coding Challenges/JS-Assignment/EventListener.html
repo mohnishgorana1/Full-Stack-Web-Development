@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Listener</title>
+
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap:20px;
+            flex-wrap: wrap;
+            
+
+        }
+        button{
+            border: 1px solid magenta;
+            font-size: 25px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+    onclick
+    double click
+    mouseover
+    mouse out
+    onkeypress
+    keydown keyup 
+    -->
+
+
+    <button id="btn1" onclick="ToggleColor()">
+        Hello Click Me Change To RED/BLUE
+    </button>
+
+    <button id="btn2" ondblclick="changeSize()" >
+        Double CLick Me to Change My Size
+    </button>
+
+    <button id="btn3" onmouseover="choomantar()" >
+        Aja tujhe jaadu dikhau
+    </button>
+    <button id="btn4" onmouseleave="transformation()">
+        If You Come and Then Go From Life I Will Change!
+    </button>
+    <button id="btn5" onkeypress="textChanger()">
+        Enter any key to change my text 
+    </button>
+    
+    <button id="btn6" onkeyup="KeyUp()">
+        Key UP => Font Size Badega  <br>
+    </button>
+    <button id="btn7" onkeydown="KeyDown()">
+        Key Down => Border change hoga
+    </button>
+
+
+    <!-- Javascript -->
+
+    <script>
+        
+        function ToggleColor(){
+            let btn1 = document.getElementById("btn1");
+            if(btn1.style.color != "red"){
+                btn1.style.color = "red";
+            }
+            else{
+                btn1.style.color = "blue";
+            }
+        }
+
+        // DOuble CLick
+        let btn2 = document.getElementById("btn2");
+        btn2.addEventListener("dblclick",changeSize);
+        function changeSize(){
+            document.getElementById("btn2").style.size="larger";
+            document.getElementById("btn2").style.padding = "15px"
+        }
+
+        // Mouse Over
+        let btn3 = document.getElementById("btn3");
+        btn3.addEventListener("mouseover",choomantar);
+        function choomantar(){
+            document.getElementById("btn3").style.display = "none";
+        }
+
+        // mouse out
+        let btn4 = document.getElementById("btn4");
+        btn4.addEventListener("mouseleave",transformation);
+        function transformation(){
+            document.getElementById("btn4").innerText = "Dil kisi ka toote chahe koi mujhse ruthe main to khelungi 🔥 "
+            document.getElementById("btn4").style.border = "2px solid orange"
+        }
+
+        // on key press
+        let btn5 = document.getElementById("btn4");
+        window.addEventListener("keypress",textChanger)
+        function textChanger(){
+            document.getElementById("btn5").innerText = "Mtlb Event Listener Dheere Dheere sikh rhe ho"
+        }
+
+        //key up 
+        let btn6 = document.getElementById("btn6")
+        window.addEventListener("keyup",KeyUp)
+        function KeyUp(){
+            document.getElementById("btn6").style.fontSize = "25px"
+            document.getElementById("btn6").style.padding = "20px"
+        }
+        //keydown
+        let btn7 = document.getElementById("btn7")
+        window.addEventListener("keydown",KeyDown)
+        function Keyydown(){
+            document.getElementById("btn7").border = "1px solid black";
+        }
+
+
+        
+    
+    </script>
+
+    
+</body>
+</html>
